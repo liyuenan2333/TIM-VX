@@ -1,7 +1,7 @@
 cmake_minimum_required (VERSION 3.14)
 project(tim-vx LANGUAGES C CXX)
 
-option(BUILD_SHARED_LIBS                "Build using shared libraries"          ON)
+option(BUILD_SHARED_LIBS                "Build using shared libraries"          OFF)
 option(TIM_VX_ENABLE_CUSTOM_OP          "Enable custom op support"              OFF)
 option(TIM_VX_ENABLE_TEST               "Build the unit test"                   OFF)
 option(TIM_VX_ENABLE_LAYOUT_INFER       "Enable layout inference support"       ON)
@@ -12,10 +12,11 @@ option(TIM_VX_BUILD_EXAMPLES            "Build demos show general usage"        
 option(TIM_VX_ENABLE_VIPLITE            "Enable lite driver api support"        OFF)
 option(TIM_VX_ENABLE_40BIT              "Enable large memory support"           OFF)
 option(TIM_VX_ENABLE_PLATFORM           "Enable multi devices support"          OFF)
+option(TIM_VX_ENABLE_REMOTE             "Enable remote service support"         OFF)
 
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Werror")
+# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Werror")
 set(CONFIG "" CACHE STRING "Target Platform")
 
 if(${TIM_VX_CODE_COVERAGE})
@@ -37,6 +38,11 @@ if(${TIM_VX_ENABLE_CUSTOM_OP})
   set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DTIM_VX_ENABLE_CUSTOM_OP")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DTIM_VX_ENABLE_CUSTOM_OP")
 endif()
+
+# if(${TIM_VX_ENABLE_REMOTE})
+#   set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DZ_SOLO")
+#   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DZ_SOLO")
+# endif()
 
 set(CMAKE_C_VISIBILITY_PRESET hidden)
 
