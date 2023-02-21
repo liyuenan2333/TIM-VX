@@ -52,7 +52,7 @@ if(TIM_VX_ENABLE_PLATFORM)
         ${PLATFORM_SRC}
     )
     if(TIM_VX_ENABLE_REMOTE)
-        message(STATUS "Using remote service")  
+        message(STATUS "Using remote service")
         include(vx/platform/remote/remote_service.cmake)
     endif()
 endif()
@@ -99,7 +99,7 @@ string(REGEX REPLACE "\\)" " " op_as_flags ${op_list_tmp})
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${op_as_flags}")
 
-add_library(${TARGET_NAME} ${${TARGET_NAME}_SRCS})
+add_library(${TARGET_NAME} STATIC ${${TARGET_NAME}_SRCS})
 target_include_directories(${TARGET_NAME} PRIVATE ${INC_DIRS})
 target_link_libraries(${TARGET_NAME} PUBLIC
     -Wl,--no-whole-archive ${EXTERNAL_LIBS} ${OVXDRV_LIBRARIES})
@@ -110,21 +110,23 @@ if(${TIM_VX_USE_EXTERNAL_OVXLIB})
 endif()
 
 if(TIM_VX_ENABLE_PLATFORM AND TIM_VX_ENABLE_REMOTE)
-    target_link_libraries(${TARGET_NAME} PUBLIC rs_grpc_proto)
 
+    target_link_libraries(${TARGET_NAME} PUBLIC pthread)
     add_executable(remote_service_server
-        ${CMAKE_CURRENT_SOURCE_DIR}/vx/platform/remote/remote_service_server.cc)
+        ${PROJECT_SOURCE_DIR}/src/tim/vx/platform/remote/remote.cc
+        ${CMAKE_CURRENT_SOURCE_DIR}/vx/platform/remote/remote_service_server.cc
+        ${PROJECT_SOURCE_DIR}/src/tim/vx/platform/remote/remote_service_client.cc
+        )
     target_link_libraries(remote_service_server
         -Wl,--whole-archive
         tim-vx
         -Wl,--no-whole-archive
         rs_grpc_proto
-        ${_GRPC_GRPC}
         ${_REFLECTION}
         ${_GRPC_GRPCPP}
         ${_PROTOBUF_LIBPROTOBUF})
 
-    add_executable(remote_service_demo 
+    add_executable(remote_service_demo
         ${CMAKE_CURRENT_SOURCE_DIR}/vx/platform/remote/remote_service_demo.cc)
     target_link_libraries(remote_service_demo -Wl,--whole-archive tim-vx)
 endif()
@@ -135,15 +137,15 @@ endif()
 install(TARGETS ${TARGET_NAME} ${TARGET_NAME}
 	DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR})
 
-install(DIRECTORY ${CMAKE_SOURCE_DIR}/include/tim/vx 
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/include/tim/vx
     DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_INCLUDEDIR}/tim)
 
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/include/tim/lite
     DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_INCLUDEDIR}/tim)
 
 if(TIM_VX_ENABLE_LAYOUT_INFER)
-    install(DIRECTORY ${CMAKE_SOURCE_DIR}/include/tim/transform 
-        DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_INCLUDEDIR}/tim)    
+    install(DIRECTORY ${CMAKE_SOURCE_DIR}/include/tim/transform
+        DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_INCLUDEDIR}/tim)
 endif()
 
 if(TIM_VX_ENABLE_PLATFORM)

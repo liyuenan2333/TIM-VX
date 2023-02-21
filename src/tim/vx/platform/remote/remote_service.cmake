@@ -1,7 +1,7 @@
-list(APPEND ${TARGET_NAME}_SRCS 
-  "${PROJECT_SOURCE_DIR}/src/tim/vx/platform/remote/remote_service_client.cc"
-  "${PROJECT_SOURCE_DIR}/src/tim/vx/platform/remote/remote_service_client.h"
-  "${PROJECT_SOURCE_DIR}/src/tim/vx/platform/remote/remote.cc")
+# list(APPEND ${TARGET_NAME}_SRCS
+#   "${PROJECT_SOURCE_DIR}/src/tim/vx/platform/remote/remote_service_client.cc"
+#   "${PROJECT_SOURCE_DIR}/src/tim/vx/platform/remote/remote_service_client.h"
+#   "${PROJECT_SOURCE_DIR}/src/tim/vx/platform/remote/remote.cc")
 
 find_package(Threads REQUIRED)
 
@@ -60,7 +60,6 @@ add_library(rs_grpc_proto
 target_link_libraries(rs_grpc_proto
   ${_REFLECTION}
   ${_GRPC_GRPCPP}
-  ${_GRPC_GRPC}
   ${_PROTOBUF_LIBPROTOBUF})
 
 # Targets remote_service_(client|server)
@@ -76,7 +75,7 @@ target_link_libraries(rs_grpc_proto
 #     ${_GRPC_GRPCPP}
 #     ${_PROTOBUF_LIBPROTOBUF}
 #     )
-#   target_include_directories(${_target} PRIVATE 
+#   target_include_directories(${_target} PRIVATE
 #     ${CMAKE_CURRENT_SOURCE_DIR}
 #   )
 # endforeach()
@@ -93,7 +92,7 @@ target_link_libraries(rs_grpc_proto
 #   ${_GRPC_GRPCPP}
 #   ${_PROTOBUF_LIBPROTOBUF})
 
-# add_executable(remote_service_demo 
+# add_executable(remote_service_demo
 #   ${CMAKE_CURRENT_SOURCE_DIR}/vx/platform/remote/remote_service_demo.cc)
 # target_link_libraries(remote_service_demo -Wl,--whole-archive tim-vx)
 
